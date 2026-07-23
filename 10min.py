@@ -160,7 +160,6 @@ def fetch_candles(smart_api, token, exchange, interval, lookback_minutes):
                 df["time"] = pd.to_datetime(df["time"])
                 for col in ["open", "high", "low", "close", "volume"]:
                     df[col] = df[col].astype(float)
-                print(df)
                 return df
                 
             else:
