@@ -164,7 +164,7 @@ def fetch_candles(smart_api, token, exchange, interval, lookback_minutes):
         except Exception as e:
             log.error(f"Candle fetch error (attempt {attempt+1}): {e}")
             time.sleep(10)
-       time.sleep(1)
+        time.sleep(1)
     return None
 
 
