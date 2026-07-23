@@ -20,6 +20,8 @@ TOTP_SECRET = "C4P6OKR4CY3QHB6DPTYGWLUIC4"     # Base32 secret from SmartAPI TOT
 
 TELEGRAM_BOT_TOKEN = "8805272234:AAFVqOaf2mrYzjqCb7zufjkaWGdwR39f460"
 TELEGRAM_CHAT_ID = "926442490"
+TELEGRAM_BOT_TOKEN2="8869988041:AAHyS7goXL3TKCJI-g2jNIi_jkMQU6-rcvo"
+TELEGRAM_CHAT_ID2 = "7984464288"
 
 DRY_RUN = False       # True = simulate orders only (no real order placed). Set False to go live.
 PRODUCT_TYPE = "INTRADAY"   # INTRADAY / DELIVERY / CARRYFORWARD (Angel One naming)
@@ -72,6 +74,12 @@ def send_telegram(message: str):
     try:
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         requests.post(url, data={"chat_id": TELEGRAM_CHAT_ID, "text": message}, timeout=10)
+    except Exception as e:
+        log.error(f"Telegram send failed: {e}")
+def send_telegram2(message:str):
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN2}/sendMessage"
+        requests.post(url, data={"chat_id": TELEGRAM_CHAT_ID2, "text": message}, timeout=10)
     except Exception as e:
         log.error(f"Telegram send failed: {e}")
 # STATE PERSISTENCE
@@ -250,11 +258,13 @@ def process_symbol(smart_api, symbol_info, state):
         if(cl_color == "GREEN" and c2_color == "GREEN" and c3_color == "GREEN" and c4_color == "GREEN" and c5_color == "GREEN" and c6_color == "GREEN"):
           #print(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
           send_telegram(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
+          send_telegram2(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
       
     if(c0_color=="GREEN" and c0_n_color=="GREEN" ):
         if(cl_color == "RED" and c2_color == "RED" and c3_color == "RED" and c4_color == "RED" and c5_color == "RED" and c6_color == "RED"):
           #print(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
           send_telegram(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
+          send_telegram2(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
 
 def main():
     log.info(f"Starting bot. DRY_RUN={DRY_RUN}")
@@ -265,6 +275,9 @@ def main():
     state = load_state()
     last_10m_marker = None
     send_telegram("🤖 Algo trading bot started (Angel One SmartAPI). Watching: "
+           + ", ".join(c["symbol"] for c in WATCHLIST
+           ))
+    send_telegram2("🤖 Algo trading bot started (Angel One SmartAPI). Watching: "
            + ", ".join(c["symbol"] for c in WATCHLIST
            ))
     
@@ -303,6 +316,7 @@ def main():
         except Exception as e:
             log.error(f"Main loop error: {e}", exc_info=True)
             send_telegram(f"⚠️ Bot main loop error: {e}")
+            send_telegram2(f"⚠️ Bot main loop error: {e}")
             time.sleep(30)
 
 
