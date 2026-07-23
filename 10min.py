@@ -250,20 +250,20 @@ def process_symbol(smart_api, symbol_info, state):
     c0=heiken_ashi.iloc[-2]
     c0_color=candle_color(c0["ha_open"],c0["ha_close"])
     c0_n_color=candle_color(c0["open"],c0["close"])
-    #print(c0_color,c0_n_color,cl_color,c2_color,c3_color,c4_color,c5_color,c6_color)
+    send_telegram(c0_color,c0_n_color,cl_color,c2_color,c3_color,c4_color,c5_color,c6_color)
 
    
     if(c0_color=="RED" and c0_n_color=="RED" ):
 
         if(cl_color == "GREEN" and c2_color == "GREEN" and c3_color == "GREEN" and c4_color == "GREEN" and c5_color == "GREEN" and c6_color == "GREEN"):
           #print(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
-          send_telegram(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
+          #send_telegram(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
           send_telegram2(f"Sell Signal for {symbol}.Current candle is Red and Previous Six candle is Green")
       
     if(c0_color=="GREEN" and c0_n_color=="GREEN" ):
         if(cl_color == "RED" and c2_color == "RED" and c3_color == "RED" and c4_color == "RED" and c5_color == "RED" and c6_color == "RED"):
           #print(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
-          send_telegram(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
+          #send_telegram(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
           send_telegram2(f"Buy Signal for {symbol}.Current candle is Green and Previous Six candle is Red")
 
 def main():
@@ -274,9 +274,9 @@ def main():
     smart_api = login()
     state = load_state()
     last_10m_marker = None
-    send_telegram("🤖 Algo trading bot started (Angel One SmartAPI). Watching: "
-           + ", ".join(c["symbol"] for c in WATCHLIST
-           ))
+   # send_telegram("🤖 Algo trading bot started (Angel One SmartAPI). Watching: "
+      #     + ", ".join(c["symbol"] for c in WATCHLIST
+      #     ))
     send_telegram2("🤖 Algo trading bot started (Angel One SmartAPI). Watching: "
            + ", ".join(c["symbol"] for c in WATCHLIST
            ))
